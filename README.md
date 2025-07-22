@@ -9,9 +9,6 @@ This project contains the `RoleManager.sol` smart contract for managing actor ro
 - Git
 - Hardhat (installed via NPM)
 
-## Project Structure
-<pre lang="markdown"> <code> ``` project/ ├── contracts/ │ └── RoleManager.sol # Smart contract 1 ├── scripts/ │ ├── deploy.js # Deploy contract to local blockchain │ └── simulateWorkflow.js # Simulate actor registration and batch events ├── test/ │ └── RoleManager.test.js # Unit tests ├── hardhat.config.js # Hardhat config ├── package.json └── README.md ``` </code> </pre>
-
 ## 🚀 Getting Started
 
 ### 1. Clone the Repository onto local machine
