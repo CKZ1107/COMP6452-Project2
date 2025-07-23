@@ -1,9 +1,12 @@
 const hre = require("hardhat");
+const fs = require("fs");
 
 async function main() {
   const [deployer, farmer, inspector] = await hre.ethers.getSigners();
   const RoleManager = await hre.ethers.getContractFactory("RoleManager");
-  const roleManager = await RoleManager.deploy();
+  const deployed = JSON.parse(fs.readFileSync("deployed.json"));
+  const roleManager = await hre.ethers.getContractAt("RoleManager", deployed.RoleManager);
+  console.log("Using existing RoleManager at:", await roleManager.getAddress());
   await roleManager.waitForDeployment();
 
   const address = await roleManager.getAddress();
