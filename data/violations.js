@@ -1,9 +1,14 @@
 // scripts/violation.js
+require("dotenv").config();
 const hre = require("hardhat");
 
 async function main() {
-  const contractAddress = "0x79F322C91B3AD907F60529Deca0DcbabCeffF72C"; // 替换为你的合约地址
-  const alert = await hre.ethers.getContractAt("ColdChainAlert", contractAddress);
+  const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+
+  const contractAddress = require("../deployed.json").ColdChainAlert;
+  const abi = require("../artifacts/contracts/ColdChainAlert.sol/ColdChainAlert.json").abi;
+
+  const contract = new ethers.Contract(contractAddress, abi, provider);
 
   const total = await alert.getTotalViolations();
   console.log(`Total violations: ${total}`);
