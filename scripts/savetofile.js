@@ -1,12 +1,21 @@
+// scripts/savetofile.js
+require("dotenv").config();
+const { ethers } = require("ethers");
 const fs = require("fs");
-const hre = require("hardhat");
 
 async function main() {
-  const contractAddress = "0x79F322C91B3AD907F60529Deca0DcbabCeffF72C";
-  const alert = await hre.ethers.getContractAt("ColdChainAlert", contractAddress);
+  // 1. 连接 Ganache 网络
+  const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
 
+  // 2. 加载合约地址和 ABI
+  const contractAddress = require("../deployed.json").ColdChainAlert;
+  const abi = require("../artifacts/contracts/ColdChainAlert.sol/ColdChainAlert.json").abi;
+
+  const alert = new ethers.Contract(contractAddress, abi, provider);
+
+  // 3. 监听事件
   alert.on("TemperatureViolation", (batchId, timestamp, temp, reporter) => {
-    console.log("🔥 Event received!");
+    console.log("🔥 TemperatureViolation event received!");
 
     const record = {
       batchId,
@@ -15,9 +24,9 @@ async function main() {
       reporter,
     };
 
-    // ⛏ 安全读写文件
     const filePath = "data/violations.json";
     let existing = [];
+
     try {
       if (fs.existsSync(filePath)) {
         const content = fs.readFileSync(filePath, "utf-8");
@@ -30,15 +39,18 @@ async function main() {
     }
 
     existing.push(record);
+
     try {
       fs.writeFileSync(filePath, JSON.stringify(existing, null, 2));
-      console.log("✅ Violation saved to:", filePath);
+      console.log(`✅ Violation saved to ${filePath}`);
     } catch (err) {
       console.error("❌ Failed to write file:", err.message);
     }
   });
 
-  console.log("Listening for violations...");
+  console.log("👂 Listening for TemperatureViolation events...");
 }
 
-main();
+main().catch((err) => {
+  console.error("❌ Error:", err);
+});
