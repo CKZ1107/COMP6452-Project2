@@ -1,4 +1,5 @@
 require("@nomicfoundation/hardhat-toolbox");
+require("@nomicfoundation/hardhat-chai-matchers")
 require("dotenv").config(); // 加载 .env 中的 RPC_URL 和私钥（如果你用 ethers）
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
