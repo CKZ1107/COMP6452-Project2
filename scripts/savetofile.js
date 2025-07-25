@@ -1,20 +1,16 @@
-// scripts/savetofile.js
-require("dotenv").config();
-const { ethers } = require("ethers");
 const fs = require("fs");
+const { ethers } = require("ethers");
 
 async function main() {
-  // 1. 连接 Ganache 网络
-  const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+  const wsProvider = new ethers.WebSocketProvider("ws://127.0.0.1:8545");
 
-  // 2. 加载合约地址和 ABI
-  const contractAddress = require("../deployed.json").ColdChainAlert;
+  const deployed = JSON.parse(fs.readFileSync("deployed.json"));
+  const contractAddress = deployed.ColdChainAlert;
+
   const abi = require("../artifacts/contracts/ColdChainAlert.sol/ColdChainAlert.json").abi;
+  const contract = new ethers.Contract(contractAddress, abi, wsProvider);  // ✅ fixed here
 
-  const alert = new ethers.Contract(contractAddress, abi, provider);
-
-  // 3. 监听事件
-  alert.on("TemperatureViolation", (batchId, timestamp, temp, reporter) => {
+  contract.on("TemperatureViolation", (batchId, timestamp, temp, reporter) => {
     console.log("🔥 TemperatureViolation event received!");
 
     const record = {
@@ -41,6 +37,7 @@ async function main() {
     existing.push(record);
 
     try {
+      fs.mkdirSync("data", { recursive: true });
       fs.writeFileSync(filePath, JSON.stringify(existing, null, 2));
       console.log(`✅ Violation saved to ${filePath}`);
     } catch (err) {

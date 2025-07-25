@@ -1,8 +1,8 @@
 [
   {
-    "batchId": "batch-001",
-    "timestamp": 1752901814,
+    "batchId": "BATCH001",
+    "timestamp": 1753443498,
     "temperature": 12,
-    "reporter": "0xf244007e93AF006dF813A0B35A59e60EE5adC48C"
+    "reporter": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
   }
 ]

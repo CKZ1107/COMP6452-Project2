@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 interface IRoleManager {
-    function recordEvent(string memory batchId, string memory eventType, string memory metadata) external;
+    function recordEvent(address reporter, string memory batchId, string memory eventType, string memory metadata) external;
 }
 contract ColdChainAlert {
     address public roleManager;
@@ -31,7 +31,7 @@ contract ColdChainAlert {
 
             // ✅ Apply RoleManager 
             string memory metadata = string(abi.encodePacked("Temperature = ", _uintToString(temperature), "C"));
-            IRoleManager(roleManager).recordEvent(batchId, "TemperatureViolation", metadata);
+            IRoleManager(roleManager).recordEvent(msg.sender, batchId, "TemperatureViolation", metadata);
         }
     }
 
