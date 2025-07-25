@@ -8,7 +8,7 @@ async function main() {
   await roleManager.waitForDeployment(); // ✅ Ensure it's fully deployed
   const address = await roleManager.getAddress(); // ✅ Use getAddress() for Hardhat v2.21+
   console.log("✅ RoleManager deployed to:", address);
-  
+
   //Deploy for ColdChainAlert
   const ColdChainAlert = await hre.ethers.getContractFactory("ColdChainAlert");
   const alert = await ColdChainAlert.deploy(address);

@@ -29,6 +29,8 @@ describe("RoleManager", function () {
     await roleManager.registerActor(farmer.address, 1);
     await roleManager.connect(farmer).registerBatch("BATCH001");
     expect(await roleManager.batches("BATCH001")).to.equal(true);
+    await roleManager.connect(farmer).registerBatch("BATCH002");
+    expect(await roleManager.batches("BATCH002")).to.equal(true);
   });
 
   it("should NOT allow non-FARMER to register a batch", async function () {
