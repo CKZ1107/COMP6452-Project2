@@ -20,14 +20,28 @@ npx hardhat compile
 In terminal 1, run:
 npx hardhat node
 
-### 4. Deploy smart contract
+### 4. Deploy smart contract and simulate workflow
 In terminal 2, run:
 npx hardhat run scripts/deploy.js --network localhost
-
-### 5. Simulate workflow
-In terminal 3, run:
 npx hardhat run scripts/simulateWorkflow.js --network localhost
+    -- This registers a farmer and inspector, registers a batch "BATCH001"
+    -- It also records harvest and inspection events
+
+### 5. Start Violation Event Listener
+In terminal 3, run:
+node scripts/savetofile.js --network localhost
+
+### 6. Report a Temperature Violation
+In terminal 2, run:
+npx hardhat run scripts/reportViolation.js --network localhost
+    -- This simulates the inspector reporting an over-threshold temperature (12°C) for BATCH001.
 
 ### 6. Run unit tests
 npx hardhat test
+
+### 7. To reset the environment
+run:
+npx hardhat clean
+npx hardhat compile
+npx hardhat node
 

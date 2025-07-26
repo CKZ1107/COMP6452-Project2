@@ -51,10 +51,10 @@ contract RoleManager {
         batches[batchId] = true;
     }
 
-    function recordEvent(string memory batchId, string memory eventType, string memory metadata)
+    function recordEvent(address reporter, string memory batchId, string memory eventType, string memory metadata)
         public onlyValidBatch(batchId)
     {
-        Role senderRole = roles[msg.sender];
+        Role senderRole = roles[reporter];
         require(senderRole == Role.FARMER || senderRole == Role.INSPECTOR || senderRole == Role.TRANSPORTER,
             "Only authorized roles can record events");
 

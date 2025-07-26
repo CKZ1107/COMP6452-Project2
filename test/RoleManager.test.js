@@ -45,8 +45,8 @@ describe("RoleManager", function () {
     await roleManager.registerActor(inspector.address, 2);
     await roleManager.connect(farmer).registerBatch("BATCH001");
 
-    await roleManager.connect(farmer).recordEvent("BATCH001", "Harvest", "Details");
-    await roleManager.connect(inspector).recordEvent("BATCH001", "Inspection", "Passed");
+    await roleManager.connect(farmer).recordEvent(farmer.address,"BATCH001", "Harvest", "Details");
+    await roleManager.connect(inspector).recordEvent(inspector.address, "BATCH001", "Inspection", "Passed");
 
     const events = await roleManager.getEvents("BATCH001");
     expect(events.length).to.equal(2);
@@ -57,7 +57,7 @@ describe("RoleManager", function () {
   it("should NOT allow recording event for nonexistent batch", async function () {
     await roleManager.registerActor(farmer.address, 1);
     await expect(
-      roleManager.connect(farmer).recordEvent("NONEXISTENT", "Harvest", "Details")
+      roleManager.connect(farmer).recordEvent(farmer.address, "NONEXISTENT", "Harvest", "Details")
     ).to.be.revertedWith("Batch does not exist");
   });
 
@@ -66,7 +66,7 @@ describe("RoleManager", function () {
     await roleManager.connect(farmer).registerBatch("BATCH001");
 
     await expect(
-      roleManager.connect(attacker).recordEvent("BATCH001", "Tamper", "Hacked!")
+      roleManager.connect(attacker).recordEvent(attacker.address,  "BATCH001", "Tamper", "Hacked!")
     ).to.be.revertedWith("Only authorized roles can record events");
   });
 });
