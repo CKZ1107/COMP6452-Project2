@@ -4,5 +4,17 @@
     "timestamp": 1753443498,
     "temperature": 12,
     "reporter": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+  },
+  {
+    "batchId": "BATCH001",
+    "timestamp": 1753786501,
+    "temperature": 12,
+    "reporter": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+  },
+  {
+    "batchId": "BATCH001",
+    "timestamp": 1753786753,
+    "temperature": 12,
+    "reporter": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
   }
 ]
