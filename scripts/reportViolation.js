@@ -15,7 +15,7 @@ async function main() {
 
   // Load ABIs
   const coldChainAbi = require("../artifacts/contracts/ColdChainAlert.sol/ColdChainAlert.json").abi;
-  const roleManagerAbi = require("../artifacts/contracts/RoleManager.sol/RoleManager.json").abi;
+  const roleManagerAbi = require("../artifacts/contracts/roleManager.sol/RoleManager.json").abi;
 
   // Instantiate contracts
   const alert = new hre.ethers.Contract(coldChainAlertAddress, coldChainAbi, inspector);
