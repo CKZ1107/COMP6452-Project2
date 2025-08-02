@@ -3,71 +3,45 @@ const pinataSDK = require('@pinata/sdk');
 const fs        = require('fs');
 const path      = require('path');
 
-/**
- * Absolute path of the file you want to pin.
- * Adjust to match your project layout.
- */
+// === Config ===
 const FILE_PATH = path.resolve(__dirname, '../data/violations.json');
+const CID_PATH = path.resolve(__dirname, '../uploads/violations.cid');
+const JWT = (process.env.PINATA_JWT || '').trim();
 
-
-// Basic pre-flight checks
-
+// === Checks ===
 if (!fs.existsSync(FILE_PATH)) {
   console.error('❌  File not found:', FILE_PATH);
   process.exit(1);
 }
-
-const JWT = (process.env.PINATA_JWT || '').trim();
 if (!JWT) {
   console.error('❌  Missing PINATA_JWT in .env');
   process.exit(1);
 }
 
-
-// Create Pinata client using a v3 JWT
-
+// === Upload ===
 const pinata = new pinataSDK({ pinataJWTKey: JWT });
 
 (async () => {
   try {
-    console.log('Uploading file to Pinata IPFS…');
-
-    // Stream the file to avoid loading it entirely into memory
+    console.log('📤 Uploading violations.json to Pinata IPFS…');
     const fileStream = fs.createReadStream(FILE_PATH);
 
-    // Optional metadata – totally safe to omit
-    const options = {
-      pinataMetadata: {
-        name: 'violations.json'
-      }
-    };
+    const res = await pinata.pinFileToIPFS(fileStream, {
+      pinataMetadata: { name: 'violations.json' },
+    });
 
-    const res = await pinata.pinFileToIPFS(fileStream, options);
+    const cid = res.IpfsHash;
+    const url = `https://gateway.pinata.cloud/ipfs/${cid}`;
 
-    console.log('Upload succeeded!');
-    console.log('CID:', res.IpfsHash);
-    console.log(`Gateway URL: https://gateway.pinata.cloud/ipfs/${res.IpfsHash}`);
+    // === Save to uploads/violations.cid ===
+    fs.mkdirSync(path.dirname(CID_PATH), { recursive: true });
+    fs.writeFileSync(CID_PATH, cid + "\n");
+
+    console.log('✅ Upload succeeded!');
+    console.log('CID:', cid);
+    console.log('Gateway URL:', url);
+    console.log(`📁 Saved CID to ${CID_PATH}`);
   } catch (err) {
-    console.error('Upload failed:', err);
+    console.error('❌ Upload failed:', err.message || err);
   }
 })();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
