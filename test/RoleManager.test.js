@@ -27,23 +27,25 @@ describe("RoleManager", function () {
 
   it("should allow FARMER to register a batch", async function () {
     await roleManager.registerActor(farmer.address, 1);
-    await roleManager.connect(farmer).registerBatch("BATCH001");
-    expect(await roleManager.batches("BATCH001")).to.equal(true);
-    await roleManager.connect(farmer).registerBatch("BATCH002");
-    expect(await roleManager.batches("BATCH002")).to.equal(true);
+    await roleManager.connect(farmer).registerBatch("BATCH001", 5, 8);
+    const batch1 = await roleManager.batches("BATCH001");
+    expect(batch1.exists).to.equal(true);
+    await roleManager.connect(farmer).registerBatch("BATCH002", 5, 8);
+    const batch2 = await roleManager.batches("BATCH001");
+    expect(batch2.exists).to.equal(true);
   });
 
   it("should NOT allow non-FARMER to register a batch", async function () {
     await roleManager.registerActor(inspector.address, 2);
     await expect(
-      roleManager.connect(inspector).registerBatch("BATCH001")
+      roleManager.connect(inspector).registerBatch("BATCH001", 5, 8)
     ).to.be.revertedWith("Access denied for this role");
   });
 
   it("should record valid events from FARMER and INSPECTOR", async function () {
     await roleManager.registerActor(farmer.address, 1);
     await roleManager.registerActor(inspector.address, 2);
-    await roleManager.connect(farmer).registerBatch("BATCH001");
+    await roleManager.connect(farmer).registerBatch("BATCH001",5, 8);
 
     await roleManager.connect(farmer).recordEvent(farmer.address,"BATCH001", "Harvest", "Details");
     await roleManager.connect(inspector).recordEvent(inspector.address, "BATCH001", "Inspection", "Passed");
@@ -63,7 +65,7 @@ describe("RoleManager", function () {
 
   it("should NOT allow actors with no role to record events", async function () {
     await roleManager.registerActor(farmer.address, 1);
-    await roleManager.connect(farmer).registerBatch("BATCH001");
+    await roleManager.connect(farmer).registerBatch("BATCH001", 5, 8);
 
     await expect(
       roleManager.connect(attacker).recordEvent(attacker.address,  "BATCH001", "Tamper", "Hacked!")

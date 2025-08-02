@@ -72,7 +72,7 @@ async function ensureRole(contractAsOwner, addr, expectedRole, label) {
   if (exists) {
     console.log(`• Batch "${BATCH_ID}" already exists, skip registerBatch`);
   } else {
-    const tx = await cFarmer.registerBatch(BATCH_ID);
+    const tx = await cFarmer.registerBatch(BATCH_ID, 10, 15);
     await tx.wait();
     console.log(`✓ Batch "${BATCH_ID}" registered by FARMER`);
   }
