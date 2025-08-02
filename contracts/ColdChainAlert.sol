@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 interface IRoleManager {
-    function recordEvent(address reporter, string memory batchId, string memory eventType, string memory metadata) external;
+    function getBatchTempRange(string calldata batchId) external view returns (uint, uint);
+    function recordEvent(address reporter,
+            string calldata batchId, string calldata eventType, string calldata metadata) external;
 }
 contract ColdChainAlert {
     address public roleManager;
-    uint public maxTempThreshold = 8;
 
     struct Violation {
         string batchId;
@@ -24,8 +25,9 @@ contract ColdChainAlert {
 
     function reportTemperature(string memory batchId, uint temperature) public {
         uint currentTime = block.timestamp;
+        (uint min, uint max) = IRoleManager(roleManager).getBatchTempRange(batchId);
 
-        if (temperature > maxTempThreshold) {
+        if (temperature < min || temperature > max) {
             violations.push(Violation(batchId, currentTime, temperature, msg.sender));
             emit TemperatureViolation(batchId, currentTime, temperature, msg.sender);
 

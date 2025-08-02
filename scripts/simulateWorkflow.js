@@ -19,7 +19,7 @@ async function main() {
   console.log("✅ Actors registered");
 
   // Register batch and events
-  await roleManager.connect(farmer).registerBatch("BATCH001");
+  await roleManager.connect(farmer).registerBatch("BATCH001", 5, 8);
   console.log("📦 Batch registered");
 
   await roleManager.connect(farmer).recordEvent(farmer.address, "BATCH001", "Harvest", "Organic apples harvested");

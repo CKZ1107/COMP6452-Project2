@@ -4,6 +4,13 @@ pragma solidity ^0.8.0;
 contract RoleManager {
     enum Role { NONE, FARMER, INSPECTOR, TRANSPORTER }
 
+    struct Batch {
+        bool exists;
+        address owner;
+        uint tempMin;
+        uint tempMax;
+    }
+
     struct BatchEvent {
         string eventType;
         string metadata;
@@ -13,9 +20,8 @@ contract RoleManager {
     }
 
     mapping(address => Role) public roles;
-    mapping(string => bool) public batches;
     mapping(string => BatchEvent[]) public batchEvents;
-
+    mapping(string => Batch) public batches;
     address public owner;
 
     modifier onlyOwner() {
@@ -29,7 +35,7 @@ contract RoleManager {
     }
 
     modifier onlyValidBatch(string memory batchId) {
-        require(batches[batchId], "Batch does not exist");
+        require(batches[batchId].exists, "Batch does not exist");
         _;
     }
 
@@ -46,9 +52,16 @@ contract RoleManager {
         return roles[user];
     }
 
-    function registerBatch(string memory batchId) public onlyRole(Role.FARMER) {
-        require(!batches[batchId], "Batch already exists");
-        batches[batchId] = true;
+    function registerBatch(string memory batchId, uint tempMin, uint tempMax) public onlyRole(Role.FARMER) {
+        require(!batches[batchId].exists, "Batch already exists");
+        require(tempMin < tempMax, "Invalid temperature range");
+        
+        batches[batchId] = Batch({
+            exists: true,
+            owner: msg.sender,
+            tempMin: tempMin,
+            tempMax: tempMax
+        });
     }
 
     function recordEvent(address reporter, string memory batchId, string memory eventType, string memory metadata)
@@ -69,5 +82,10 @@ contract RoleManager {
 
     function getEvents(string memory batchId) public view onlyValidBatch(batchId) returns (BatchEvent[] memory) {
         return batchEvents[batchId];
+    }
+
+    function getBatchTempRange(string memory batchId) external view onlyValidBatch(batchId) returns (uint, uint) {
+        Batch memory b = batches[batchId];
+        return (b.tempMin, b.tempMax);
     }
 }

@@ -16,7 +16,7 @@ describe("ColdChainAlert", function () {
 
     await roleManager.registerActor(farmer.address, 1);     // FARMER
     await roleManager.registerActor(inspector.address, 2);  // INSPECTOR
-    await roleManager.connect(farmer).registerBatch("BATCH001");
+    await roleManager.connect(farmer).registerBatch("BATCH001", 5, 8);
 
     ColdChainAlert = await ethers.getContractFactory("ColdChainAlert");
     coldChainAlert = await ColdChainAlert.deploy(await roleManager.getAddress());
