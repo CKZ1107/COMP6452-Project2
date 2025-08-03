@@ -7,8 +7,8 @@ contract RoleManager {
     struct Batch {
         bool exists;
         address owner;
-        uint tempMin;
-        uint tempMax;
+        int tempMin;
+        int tempMax;
     }
 
     struct BatchEvent {
@@ -52,7 +52,7 @@ contract RoleManager {
         return roles[user];
     }
 
-    function registerBatch(string memory batchId, uint tempMin, uint tempMax) public onlyRole(Role.FARMER) {
+    function registerBatch(string memory batchId, int tempMin, int tempMax) public onlyRole(Role.FARMER) {
         require(!batches[batchId].exists, "Batch already exists");
         require(tempMin < tempMax, "Invalid temperature range");
         
@@ -84,7 +84,7 @@ contract RoleManager {
         return batchEvents[batchId];
     }
 
-    function getBatchTempRange(string memory batchId) external view onlyValidBatch(batchId) returns (uint, uint) {
+    function getBatchTempRange(string memory batchId) external view onlyValidBatch(batchId) returns (int, int) {
         Batch memory b = batches[batchId];
         return (b.tempMin, b.tempMax);
     }

@@ -84,8 +84,8 @@ async function cmdUserRole(address) {
 async function cmdBatchExists(batchIdArg) {
   const batchId = batchIdArg || DEFAULT_BATCH_ID;
   await ensureContract();
-  const exists = await contract.batches(batchId);
-  console.log(`Batch ${batchId} registered?`, Boolean(exists));
+  const batch = await contract.batches(batchId);
+  console.log(`Batch ${batchId} registered?`, batch.exists);
 }
 
 async function cmdOwner() {
