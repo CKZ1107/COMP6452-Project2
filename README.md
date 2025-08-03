@@ -3,6 +3,7 @@ This project implements a blockchain-based fruit supply chain management system.
 RoleManager.sol: Manages actor roles, batch registrations and event logs
 ColdChainAlert.sol: ColdChainAlert.sol: Handles temperature violation reports
 A CLI tool (main.js) that lets users interactively register actors, batches, events, and violations.
+A Python Oracle script that reads simulated temperature logs and triggers on-chain alerts
 
 ## 🧑‍💻 Prerequisites
 
@@ -10,6 +11,8 @@ A CLI tool (main.js) that lets users interactively register actors, batches, eve
 - NPM
 - Git
 - Hardhat (installed via NPM)
+- Python 3.10+
+- pip (Python package manager)
 
 ## 🚀 Getting Started
 
@@ -43,7 +46,24 @@ Interactively perform the following actions:
 In terminal 3, run:
 node scripts/savetofile.js --network localhost
 
-### 7. Look up scripts
+### 7. Run Python Oracle Script
+This script reads simulated temperature logs and calls reportTemperature() on ColdChainAlert to check if the threshold is exceeded.
+Set up:
+cd oracle_v2
+python -m venv venv
+Windows: venv\Scripts\activate  
+macOS/Linux: source venv/bin/activate  
+pip install -r requirements.txt
+
+Run Oracle:
+python oracle_main.py
+
+This will:
+    -   Read simulated IoT temp logs from oracle_v2/data/temperature_log.json
+    -   Call reportTemperature() on ColdChainAlert
+    -   Listen for TemperatureViolation events and log them to oracle_v2/data/violations.json
+
+### 8. Look up scripts
 For coldChainAlert_lookup.js:
 node scripts/coldChainAlert_lookup.js all
     -- list all recorded temperature violations
@@ -60,10 +80,10 @@ node scripts/roleManager_lookup.js batch-exists BATCH001
 node scripts/roleManager_lookup.js owner
     -- Check who owns the roleManager contract
 
-### 8. Run unit tests
+### 9. Run unit tests
 npx hardhat test
 
-### 9. To reset the environment
+### 10. To reset the environment
 run:
 npx hardhat clean
 npx hardhat compile
@@ -74,7 +94,7 @@ npx hardhat node
  - Events are timestamped and include role/address
  - Temperature thresholds are stored per batch
  - IPFS integration uses Pinata via JWT
-
+ - Python Oracle script automates temperature monitoring and alerting
 
  
 

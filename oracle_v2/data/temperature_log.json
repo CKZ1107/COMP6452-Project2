@@ -1,0 +1,26 @@
+[
+    {
+        "batchId": "BATCH001",
+        "timestamp": 1753786753,
+        "temperature": 12,
+        "reporter": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+      },
+    {
+        "batchId": "BATCH001",
+        "timestamp": 1754106986,
+        "temperature": 17,
+        "reporter": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+    },
+    {
+        "batchId": "GRAPE01",
+        "timestamp": 1754109799,
+        "temperature": 12,
+        "reporter": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+    },
+    {
+      "batchId": "APPLE01",
+      "timestamp": 1754112015,
+      "temperature": 2,
+      "reporter": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+    }
+]
