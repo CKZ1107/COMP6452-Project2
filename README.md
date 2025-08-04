@@ -74,6 +74,8 @@ npx hardhat node
  - Events are timestamped and include role/address
  - Temperature thresholds are stored per batch
  - IPFS integration uses Pinata via JWT
+ - To access the log page, type in the web browser
+ https://ipfs.io/ipfs/{CID}
 
 
  
