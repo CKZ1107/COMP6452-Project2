@@ -41,16 +41,20 @@ async function main() {
     const total = await contract.getTotalViolations();
     console.log(`Total violations: ${total}`);
   } else if (args[0] === "config") {
-    const threshold = await contract.maxTempThreshold();
-    const roleManager = await contract.roleManager();
-    console.log("Temperature threshold:", threshold.toString());
-    console.log("RoleManager address:", roleManager);
+    const batchId = args[1];
+    const roleManagerAddr = await contract.roleManager();
+    const roleManagerAbi = require("../artifacts/contracts/roleManager.sol/RoleManager.json").abi;
+    const roleManager = new ethers.Contract(roleManagerAddr, roleManagerAbi, provider);
+    const [min, max] = await roleManager.getBatchTempRange(batchId);
+    console.log(`  Min Temp: ${min}°C`);
+    console.log(`  Max Temp: ${max}°C`);
+    console.log("RoleManager address:", roleManager.target);
   } else {
     console.log("Usage:");
-    console.log("  node scripts/coldChainAlert_lookup.js all            # List all violations");
-    console.log("  node scripts/coldChainAlert_lookup.js one <index>    # Query a violation by index");
-    console.log("  node scripts/coldChainAlert_lookup.js count          # Show total number of violations");
-    console.log("  node scripts/coldChainAlert_lookup.js config         # Show contract configuration");
+    console.log("  node scripts/coldChainAlert_lookup.js all                   # List all violations");
+    console.log("  node scripts/coldChainAlert_lookup.js one <index>           # Query a violation by index");
+    console.log("  node scripts/coldChainAlert_lookup.js count                 # Show total number of violations");
+    console.log("  node scripts/coldChainAlert_lookup.js config <batchID>      # Show contract configuration");
   }
 }
 main();
