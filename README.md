@@ -66,7 +66,7 @@ npx hardhat node
 
 
 # IPFS Integration – Upload and CID Registration
-This section describes how to upload metadata to IPFS via NFT.Storage and register the resulting CID on-chain.
+This section describes how to upload metadata to IPFS via PINATA SDK and register the resulting CID on-chain.
 
 ## 🧑‍💻 Prerequisites
 - Node.js (v16 or above)
